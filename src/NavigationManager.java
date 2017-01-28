@@ -42,7 +42,7 @@ public class NavigationManager {
 				navigator.interrupt();
 				return null;
 			}
-		});
+		}, ObstacleWatcher.ObstacleWatcherMode.ObstacleWatch, null);
 		
 		ow.start();
 		

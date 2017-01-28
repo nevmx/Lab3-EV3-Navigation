@@ -19,12 +19,25 @@ public class ObstacleWatcher extends Thread {
 	
 	private SensorModes usSensor;
 	
-	public ObstacleWatcher(Port usPort, Callable<Void> callback) {
+	private BangBangController bbc;
+	
+	public enum ObstacleWatcherMode {
+		ObstacleWatch,
+		WallFollow
+	}
+	
+	public ObstacleWatcher(Port usPort, Callable<Void> callback, ObstacleWatcherMode mode, BangBangController bbc) {
 		this.callback = callback;
 		this.usPort = usPort;
 		
-		watching = true;
-		wallFollowing = false;
+		if (mode == ObstacleWatcherMode.ObstacleWatch) {
+			watching = true;
+			wallFollowing = false;
+		} else {
+			watching = false;
+			wallFollowing = true;
+			this.bbc = bbc;
+		}
 		
 		usSensor = new EV3UltrasonicSensor(usPort);
 		us = usSensor.getMode("Distance");
@@ -44,14 +57,13 @@ public class ObstacleWatcher extends Thread {
 				try {
 					callback.call();
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				watching = false;
 			}
 			
 			if (wallFollowing) {
-				// TODO Wall following
+				bbc.processUSData(distance);
 			}
 			
 			try { Thread.sleep(50); } catch(Exception e){}

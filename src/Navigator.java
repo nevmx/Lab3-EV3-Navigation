@@ -4,6 +4,7 @@ import java.util.Queue;
 import lejos.hardware.Sound;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.motor.EV3MediumRegulatedMotor;
+import lejos.hardware.port.Port;
 
 public class Navigator extends Thread {
 	
@@ -42,8 +43,30 @@ public class Navigator extends Thread {
 		interrupted = false;
 	}
 	
-	private void travelTo(double x, double y) {
-		// TODO
+	private void travelTo(double nextX, double nextY) {
+		// Compute the heading
+		double currentX = odometer.getX();
+		double currentY = odometer.getY();
+		
+		// Source: http://math.stackexchange.com/questions/1596513/find-the-bearing-angle-between-two-points-in-a-2d-space
+		double nextHeading = Math.toDegrees(Math.atan2(nextX - currentX, nextY - currentY));
+		if (nextHeading < 0) {
+			nextHeading += 360;
+		}
+		
+		// Turn to next heading
+		turnTo(nextHeading);
+		
+		// Calculate the distance
+		double distance = Math.sqrt(Math.pow(nextY-currentY, 2) + Math.pow(nextX - currentX,2));
+		
+		// Set speed for straight line travel
+		leftMotor.setSpeed(300);
+		rightMotor.setSpeed(300);
+		
+		// Travel to next waypoint
+		leftMotor.rotate(SquareDriver.convertDistance(wheelRadius, distance), true);
+		rightMotor.rotate(SquareDriver.convertDistance(wheelRadius, distance), false);
 	}
 	
 	private void turnTo(double theta) {
@@ -95,41 +118,12 @@ public class Navigator extends Thread {
 		
 		this.isNavigating = true;
 		
-//		double nextX = 0;
-//		double nextY = 0;
-		
 		while (!waypoints.isEmpty()) {
 						
 			// Dequeue the next waypoint
 			Waypoint nextWaypoint = waypoints.poll();
 			
-			// Compute the heading
-			double currentX = odometer.getX();
-			double currentY = odometer.getY();
-			double nextX = nextWaypoint.getX();
-			double nextY = nextWaypoint.getY();
-			
-			// Source: http://math.stackexchange.com/questions/1596513/find-the-bearing-angle-between-two-points-in-a-2d-space
-			double nextHeading = Math.toDegrees(Math.atan2(nextX - currentX, nextY - currentY));
-			if (nextHeading < 0) {
-				nextHeading += 360;
-			}
-			
-			this.tempNextHeading = nextHeading;
-			
-			// Turn to next heading
-			turnTo(nextHeading);
-			
-			// Calculate the distance
-			double distance = Math.sqrt(Math.pow(nextY-currentY, 2) + Math.pow(nextX - currentX,2));
-			
-			// Set speed for straight line travel
-			leftMotor.setSpeed(300);
-			rightMotor.setSpeed(300);
-			
-			// Travel to next waypoint
-			leftMotor.rotate(SquareDriver.convertDistance(wheelRadius, distance), true);
-			rightMotor.rotate(SquareDriver.convertDistance(wheelRadius, distance), false);
+			travelTo(nextWaypoint.getX(), nextWaypoint.getY());
 			
 			try {
 				Thread.sleep(1000);
@@ -155,8 +149,14 @@ public class Navigator extends Thread {
 		// nextWaypoint was the waypoint when navigation was interrupted
 		// The remaining waypoints are still in the waypoints Queue
 		Sound.twoBeeps();
-		usMotor.rotateTo(80);
+		usMotor.rotateTo(75);
 		usMotor.stop();
+		
+		// Turn right to avoid obstacle
+		turnTo(odometer.getTheta() + 90);
+		
+		// Start following the wall
+		BangBangController bbc = new BangBangController(leftMotor, rightMotor, 20, 3, 100, 200);
 	}
 	
 	public void interrupt() {
