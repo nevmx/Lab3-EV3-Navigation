@@ -8,6 +8,9 @@ import lejos.robotics.SampleProvider;
 
 public class ObstacleWatcher extends Thread {
 	
+	private final static int OBJECT_DISTANCE = 10;
+	private final static int BEEP_VOLUME = 30;
+	
 	private Callable<Void> callback;
 	
 	private SampleProvider us;
@@ -17,9 +20,7 @@ public class ObstacleWatcher extends Thread {
 	private boolean watching;
 	
 	private SensorModes usSensor;
-	
-	private BangBangController bbc;
-	
+		
 	private int distance;
 	
 	public ObstacleWatcher(Port usPort, Callable<Void> callback) {
@@ -32,7 +33,7 @@ public class ObstacleWatcher extends Thread {
 		us = usSensor.getMode("Distance");
 		usData = new float[us.sampleSize()];
 		
-		Sound.setVolume(30);
+		Sound.setVolume(BEEP_VOLUME);
 	}
 	
 	@Override
@@ -41,7 +42,7 @@ public class ObstacleWatcher extends Thread {
 			us.fetchSample(usData,0);							// acquire data
 			distance=(int)(usData[0]*100.0);
 			
-			if (distance < 15 && watching) {
+			if (distance < OBJECT_DISTANCE && watching) {
 				try {
 					callback.call();
 				} catch (Exception e) {

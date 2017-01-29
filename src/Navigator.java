@@ -8,6 +8,13 @@ import lejos.hardware.port.Port;
 
 public class Navigator extends Thread {
 	
+	final static int STRAIGHT_LINE_TRAVEL_SPEED = 300;
+	final static int TURN_SPEED = 150;
+	final static int MOTOR_ACCELERATION = 750;
+	
+	final static int US_MOTOR_SPEED = 100;
+	final static int US_MOTOR_ACCELERATION = 2000;
+	
 	private boolean isNavigating;
 	private Odometer odometer;
 	
@@ -33,8 +40,8 @@ public class Navigator extends Thread {
 		wheelRadius = odometer.WR;
 		wheelBase = odometer.WB;
 		
-		usMotor.setSpeed(100);
-		usMotor.setAcceleration(2000);
+		usMotor.setSpeed(US_MOTOR_SPEED);
+		usMotor.setAcceleration(US_MOTOR_ACCELERATION);
 		usMotor.rotateTo(0);
 		
 		interrupted = false;
@@ -58,8 +65,8 @@ public class Navigator extends Thread {
 		double distance = Math.sqrt(Math.pow(nextY-currentY, 2) + Math.pow(nextX - currentX,2));
 		
 		// Set speed for straight line travel
-		leftMotor.setSpeed(300);
-		rightMotor.setSpeed(300);
+		leftMotor.setSpeed(STRAIGHT_LINE_TRAVEL_SPEED);
+		rightMotor.setSpeed(STRAIGHT_LINE_TRAVEL_SPEED);
 		
 		// Travel to next waypoint
 		leftMotor.rotate(SquareDriver.convertDistance(wheelRadius, distance), true);
@@ -68,8 +75,8 @@ public class Navigator extends Thread {
 	
 	private void turnTo(double theta) {
 		// Set speed for rotation
-		leftMotor.setSpeed(150);
-		rightMotor.setSpeed(150);
+		leftMotor.setSpeed(TURN_SPEED);
+		rightMotor.setSpeed(TURN_SPEED);
 		
 		double currentHeading = odometer.getTheta();
 		
@@ -100,14 +107,13 @@ public class Navigator extends Thread {
 		try {
 			Thread.sleep(5000);
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
 		// reset the motors
 		for (EV3LargeRegulatedMotor motor : new EV3LargeRegulatedMotor[] { leftMotor, rightMotor }) {
 			motor.stop();
-			motor.setAcceleration(750);
+			motor.setAcceleration(MOTOR_ACCELERATION);
 		}
 		
 		this.isNavigating = true;
@@ -122,7 +128,6 @@ public class Navigator extends Thread {
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -188,7 +193,6 @@ public class Navigator extends Thread {
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
