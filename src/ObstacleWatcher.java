@@ -8,7 +8,7 @@ import lejos.robotics.SampleProvider;
 
 public class ObstacleWatcher extends Thread {
 	
-	private final static int OBJECT_DISTANCE = 15;
+	private final static int OBJECT_DISTANCE = 10;
 	private final static int BEEP_VOLUME = 30;
 	
 	private Callable<Void> callback;

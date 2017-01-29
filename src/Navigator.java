@@ -8,12 +8,12 @@ import lejos.hardware.port.Port;
 
 public class Navigator extends Thread {
 	
-	final static int STRAIGHT_LINE_TRAVEL_SPEED = 150;
+	final static int STRAIGHT_LINE_TRAVEL_SPEED = 200;
 	final static int TURN_SPEED = 75;
-	final static int MOTOR_ACCELERATION = 150;
+	final static int MOTOR_ACCELERATION = 2000;
 	
 	final static int US_MOTOR_SPEED = 100;
-	final static int US_MOTOR_ACCELERATION = 2000;
+	final static int US_MOTOR_ACCELERATION = 1000;
 	
 	final static int WF_BANDCENTER = 10;			// Offset from the wall (cm)
 	final static int WF_BANDWIDTH = 3;				// Width of dead band (cm)
@@ -209,14 +209,14 @@ public class Navigator extends Thread {
 			}
 		}
 		
-//		rightMotor.setSpeed(WF_MOTOR_LOW);
-//		rightMotor.forward();
+		rightMotor.setSpeed(WF_MOTOR_LOW);
+		rightMotor.forward();
 		
-//		try {
-//			Thread.sleep(300);
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
+		try {
+			Thread.sleep(300);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		
 		rightMotor.stop(true);
 		leftMotor.stop();
