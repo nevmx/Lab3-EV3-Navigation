@@ -15,6 +15,12 @@ public class Navigator extends Thread {
 	final static int US_MOTOR_SPEED = 100;
 	final static int US_MOTOR_ACCELERATION = 2000;
 	
+	final static int WF_BANDCENTER = 10;			// Offset from the wall (cm)
+	final static int WF_BANDWIDTH = 3;				// Width of dead band (cm)
+	final static int WF_MOTOR_LOW = 100;			// Speed of slower rotating wheel (deg/sec)
+	final static int WF_MOTOR_HIGH = 200;
+	final static int WF_FINAL_ANGLE_THRESHOLD = 45;
+	
 	private boolean isNavigating;
 	private Odometer odometer;
 	
@@ -159,14 +165,14 @@ public class Navigator extends Thread {
 		double finalAngle = odometer.getTheta() - 180;
 				
 		// Follow the wall until you make a full 180 turn
-		while (Math.abs(odometer.getTheta() - finalAngle) > 15) {
+		while (Math.abs(odometer.getTheta() - finalAngle) > WF_FINAL_ANGLE_THRESHOLD) {
 			
 			int distance = ow.getDistance();
 			
-			int bandCenter = 10;			// Offset from the wall (cm)
-			int bandWidth = 3;				// Width of dead band (cm)
-			int motorLow = 100;			// Speed of slower rotating wheel (deg/sec)
-			int motorHigh = 200;
+			int bandCenter = WF_BANDCENTER;
+			int bandWidth = WF_BANDWIDTH;
+			int motorLow = WF_MOTOR_LOW;
+			int motorHigh = WF_MOTOR_HIGH;
 			
 			// Right turn
 			if (distance < (bandCenter - bandWidth)) {
