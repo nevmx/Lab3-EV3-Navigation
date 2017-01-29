@@ -155,11 +155,17 @@ public class Navigator extends Thread {
 		if (finalAngle < 0)
 			finalAngle += 360;
 		
+		double currentAngle = odometer.getTheta();
+		
 		// Follow the wall until you make a full 180 turn
-		while (Math.abs(odometer.getTheta() - finalAngle) > 15) {
+		while (Math.abs(currentAngle - finalAngle) > 15) {
+			if (currentAngle < 0) {
+				currentAngle += 360;
+			}
+			
 			int distance = ow.getDistance();
 			
-			int bandCenter = 25;			// Offset from the wall (cm)
+			int bandCenter = 15;			// Offset from the wall (cm)
 			int bandWidth = 3;				// Width of dead band (cm)
 			int motorLow = 100;			// Speed of slower rotating wheel (deg/sec)
 			int motorHigh = 200;
@@ -192,10 +198,15 @@ public class Navigator extends Thread {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			
+			currentAngle = odometer.getTheta();
 		}
 		
 		leftMotor.stop(true);
 		rightMotor.stop();
+		
+		usMotor.rotateTo(0);
+		usMotor.stop();
 		
 		// Now we need to get back on track.
 	}
