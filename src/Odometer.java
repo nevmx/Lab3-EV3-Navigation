@@ -12,7 +12,7 @@ public class Odometer extends Thread {
 	private EV3LargeRegulatedMotor leftMotor, rightMotor;
 	public static String orientation;
 	// odometer update period, in ms
-	private static final long ODOMETER_PERIOD = 25;
+	private static final long ODOMETER_PERIOD = 12;
 	
 	public static int lastTachoL;			// Tacho L at last sample
 	public static int lastTachoR;			// Tacho R at last sample 

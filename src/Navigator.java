@@ -9,8 +9,8 @@ import lejos.hardware.port.Port;
 public class Navigator extends Thread {
 	
 	final static int STRAIGHT_LINE_TRAVEL_SPEED = 300;
-	final static int TURN_SPEED = 150;
-	final static int MOTOR_ACCELERATION = 750;
+	final static int TURN_SPEED = 75;
+	final static int MOTOR_ACCELERATION = 300;
 	
 	final static int US_MOTOR_SPEED = 100;
 	final static int US_MOTOR_ACCELERATION = 2000;
@@ -19,7 +19,7 @@ public class Navigator extends Thread {
 	final static int WF_BANDWIDTH = 3;				// Width of dead band (cm)
 	final static int WF_MOTOR_LOW = 100;			// Speed of slower rotating wheel (deg/sec)
 	final static int WF_MOTOR_HIGH = 200;
-	final static int WF_FINAL_ANGLE_THRESHOLD = 45;
+	final static int WF_FINAL_ANGLE_THRESHOLD = 85;
 	
 	private boolean isNavigating;
 	private Odometer odometer;
@@ -142,6 +142,12 @@ public class Navigator extends Thread {
 				
 				followWall();
 				
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+				
 				// Continue traveling
 				travelTo(nextWaypoint.getX(), nextWaypoint.getY());
 			}
@@ -159,10 +165,10 @@ public class Navigator extends Thread {
 		usMotor.stop();
 		
 		// Turn right to avoid obstacle
-		turnTo(odometer.getTheta() + 90);
+		turnTo(odometer.getTheta() + 90.0);
 		
 		// Start following the wall
-		double finalAngle = odometer.getTheta() - 180;
+		double finalAngle = odometer.getTheta() - 180.0;
 				
 		// Follow the wall until you make a full 180 turn
 		while (Math.abs(odometer.getTheta() - finalAngle) > WF_FINAL_ANGLE_THRESHOLD) {
@@ -201,6 +207,15 @@ public class Navigator extends Thread {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+		}
+		
+		leftMotor.setSpeed(WF_MOTOR_LOW);
+		rightMotor.setSpeed(WF_MOTOR_LOW);
+		
+		try {
+			Thread.sleep(25);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 		
 		leftMotor.stop(true);
