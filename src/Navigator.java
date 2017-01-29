@@ -19,6 +19,8 @@ public class Navigator extends Thread {
 	private double wheelRadius;
 	private double wheelBase;
 	
+	private ObstacleWatcher ow;
+	
 	private boolean interrupted;
 	
 	//Temp
@@ -156,12 +158,60 @@ public class Navigator extends Thread {
 		turnTo(odometer.getTheta() + 90);
 		
 		// Start following the wall
-		BangBangController bbc = new BangBangController(leftMotor, rightMotor, 20, 3, 100, 200);
+		double finalAngle = odometer.getTheta() - 180;
+		if (finalAngle < 0)
+			finalAngle += 360;
+		
+		// Follow the wall until you make a full 180 turn
+		while (Math.abs(odometer.getTheta() - finalAngle) > 15) {
+			int distance = ow.getDistance();
+			
+			int bandCenter = 25;			// Offset from the wall (cm)
+			int bandWidth = 3;				// Width of dead band (cm)
+			int motorLow = 100;			// Speed of slower rotating wheel (deg/sec)
+			int motorHigh = 200;
+			
+			// Right turn
+			if (distance < (bandCenter - bandWidth)) {
+				leftMotor.setSpeed(motorLow);
+				rightMotor.setSpeed(0);
+			}
+			
+			// Left turn
+			else if (distance > (bandCenter + bandWidth)) {
+				leftMotor.setSpeed((int)(motorLow*1.35));
+				rightMotor.setSpeed(motorHigh);
+			}
+			
+			// Straight
+			else {
+				leftMotor.setSpeed(motorHigh);
+				rightMotor.setSpeed(motorHigh);
+			}
+			
+			leftMotor.forward();
+			rightMotor.forward();
+			
+			// Pause for 100 ms
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		leftMotor.stop(true);
+		rightMotor.stop();
+		
+		// Now we need to get back on track.
 	}
 	
-	public void interrupt() {
+	public void interrupt(ObstacleWatcher ow) {
 		leftMotor.stop(true);
 		rightMotor.stop();
 		this.interrupted = true;
+		
+		this.ow = ow;
 	}
 }

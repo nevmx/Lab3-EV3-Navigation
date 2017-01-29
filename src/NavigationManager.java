@@ -39,7 +39,7 @@ public class NavigationManager {
 			@Override
 			public Void call() {
 				Sound.beep();
-				navigator.interrupt();
+				navigator.interrupt(ow);
 				return null;
 			}
 		}, ObstacleWatcher.ObstacleWatcherMode.ObstacleWatch, null);

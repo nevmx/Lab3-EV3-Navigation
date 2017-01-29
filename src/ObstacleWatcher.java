@@ -21,6 +21,8 @@ public class ObstacleWatcher extends Thread {
 	
 	private BangBangController bbc;
 	
+	private int distance;
+	
 	public enum ObstacleWatcherMode {
 		ObstacleWatch,
 		WallFollow
@@ -48,7 +50,6 @@ public class ObstacleWatcher extends Thread {
 	
 	@Override
 	public void run() {
-		int distance;
 		while (true) {
 			us.fetchSample(usData,0);							// acquire data
 			distance=(int)(usData[0]*100.0);
@@ -62,11 +63,11 @@ public class ObstacleWatcher extends Thread {
 				watching = false;
 			}
 			
-			if (wallFollowing) {
-				bbc.processUSData(distance);
-			}
-			
 			try { Thread.sleep(50); } catch(Exception e){}
 		}
+	}
+	
+	public int getDistance() {
+		return this.distance;
 	}
 }
