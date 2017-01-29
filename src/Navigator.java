@@ -137,16 +137,17 @@ public class Navigator extends Thread {
 			if (interrupted) {
 				interrupted = false;
 				
-				followWall(nextWaypoint);
+				followWall();
 				
-				break;
+				// Continue traveling
+				travelTo(nextWaypoint.getX(), nextWaypoint.getY());
 			}
 		}
 		
 		this.isNavigating = false;
 	}
 	
-	private void followWall(Waypoint nextWaypoint) {
+	private void followWall() {
 		// Follow the wall now.
 		// nextWaypoint was the waypoint when navigation was interrupted
 		// The remaining waypoints are still in the waypoints Queue
