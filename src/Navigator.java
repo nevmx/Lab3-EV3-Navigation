@@ -22,11 +22,6 @@ public class Navigator extends Thread {
 	private ObstacleWatcher ow;
 	
 	private boolean interrupted;
-	
-	//Temp
-	public double tempCurrentHeading;
-	public double tempNextHeading;
-	public double tempRotAngle;
 		
 	public Navigator(Odometer o, Queue<Waypoint> w, EV3MediumRegulatedMotor usMotor) {
 		odometer = o;
@@ -77,7 +72,6 @@ public class Navigator extends Thread {
 		rightMotor.setSpeed(150);
 		
 		double currentHeading = odometer.getTheta();
-		this.tempCurrentHeading = currentHeading;
 		
 		// Determine rotation angle and direction
 		// Source: http://stackoverflow.com/questions/1878907/the-smallest-difference-between-2-angles
@@ -87,8 +81,6 @@ public class Navigator extends Thread {
 		else if (rotationAngle < -180)
 			rotationAngle += 360;
 		
-		this.tempRotAngle = rotationAngle;
-
 		if (rotationAngle > 0) {
 			leftMotor.rotate(SquareDriver.convertAngle(wheelRadius, wheelBase, rotationAngle), true);
 			rightMotor.rotate(-SquareDriver.convertAngle(wheelRadius, wheelBase, rotationAngle), false);
