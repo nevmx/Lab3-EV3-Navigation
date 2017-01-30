@@ -137,6 +137,8 @@ public class Navigator extends Thread {
 				e.printStackTrace();
 			}
 			
+			// Navigation was asked to be interrupted by another thread.
+			// The thread executing this should now be wall following.
 			if (interrupted) {
 				interrupted = false;
 				
@@ -156,6 +158,11 @@ public class Navigator extends Thread {
 		this.isNavigating = false;
 	}
 	
+	/*
+	 * Follow the wall. At this point, the robot stopped around 10 cm away from the wall
+	 * We need to turn right and follow the wall. After this method ends, the robot will
+	 * continue following waypoints.
+	 */
 	private void followWall() {
 		// Follow the wall now.
 		// nextWaypoint was the waypoint when navigation was interrupted
@@ -209,25 +216,37 @@ public class Navigator extends Thread {
 			}
 		}
 		
+		/*
+		 * This was needed to reduce slip/increase odometer precision.
+		 */
 		leftMotor.setSpeed(WF_MOTOR_LOW);
 		rightMotor.setSpeed(WF_MOTOR_LOW);
 		
+		// Give the robot time to stabilize
 		try {
 			Thread.sleep(25);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		
+		// Stop - wall following needs to stop.
 		leftMotor.stop(true);
 		rightMotor.stop();
 		
+		
+		// Rotate sensor back to straight.
 		usMotor.rotateTo(0);
 		usMotor.stop();
 		
 		// Now we need to get back on track.
 	}
 	
+	/*
+	 * Interrupt Waypoint following and stop. An instance of ObstacleWatcher is passed
+	 * so that it can be used to gather distance data to follow the wall.
+	 */
 	public void interrupt(ObstacleWatcher ow) {
+		// Calling .stop() causes the thread that is currently navigating to stop.
 		leftMotor.stop(true);
 		rightMotor.stop();
 		this.interrupted = true;

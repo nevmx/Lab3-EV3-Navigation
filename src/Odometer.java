@@ -45,7 +45,6 @@ public class Odometer extends Thread {
 
 		while (true) {
 			updateStart = System.currentTimeMillis();
-			//TODO put (some of) your odometer code here
 			nowTachoL = leftMotor.getTachoCount();      		// get tacho counts
 			nowTachoR = rightMotor.getTachoCount();
 			distL = 3.14159*WR*(nowTachoL-lastTachoL)/180;		// compute L and R wheel displacements
@@ -61,7 +60,6 @@ public class Odometer extends Thread {
 				 * Only update the values of x, y, and theta in this block. 
 				 * Do not perform complex math
 				 */ 
-				 //TODO replace example value
 				theta += deltaT;									// update heading
 			    dX = deltaD * Math.sin(theta);						// compute X component of displacement
 				dY = deltaD * Math.cos(theta);						// compute Y component of displacement

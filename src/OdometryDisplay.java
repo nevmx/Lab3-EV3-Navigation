@@ -9,13 +9,11 @@ public class OdometryDisplay extends Thread {
 	private static final long DISPLAY_PERIOD = 250;
 	private Odometer odometer;
 	private TextLCD t;
-//	private Navigator n;
 
 	// constructor
 	public OdometryDisplay(Odometer odometer, TextLCD t) {
 		this.odometer = odometer;
 		this.t = t;
-//		this.n= n;
 	}
 
 	// run method (required for Thread)
@@ -41,9 +39,6 @@ public class OdometryDisplay extends Thread {
 			for (int i = 0; i < 3; i++) {
 				t.drawString(formattedDoubleToString(position[i], 2), 3, i);
 			}
-//			t.drawString("Current:" + n.tempCurrentHeading , 0, 3);
-//			t.drawString("Next:"+n.tempNextHeading,0, 4);
-//			t.drawString("R Angle:"+n.tempRotAngle ,0, 5);
 
 			// throttle the OdometryDisplay
 			displayEnd = System.currentTimeMillis();

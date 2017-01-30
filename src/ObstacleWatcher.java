@@ -42,6 +42,7 @@ public class ObstacleWatcher extends Thread {
 			us.fetchSample(usData,0);							// acquire data
 			distance=(int)(usData[0]*100.0);
 			
+			// If the object is in watching mode, call the callback function 
 			if (distance < OBJECT_DISTANCE && watching) {
 				try {
 					callback.call();
