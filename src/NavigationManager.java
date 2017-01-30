@@ -35,7 +35,7 @@ public class NavigationManager {
 	
 	public void runPartTwo() {
 		// Initialize the ObstacleWatcher class
-		ow = new ObstacleWatcher(usPort, new Callable<Void> () {
+		ow = new ObstacleWatcher(usPort, new Callable<Void>() {
 			@Override
 			public Void call() {
 				Sound.beep();

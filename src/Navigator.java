@@ -75,8 +75,8 @@ public class Navigator extends Thread {
 		rightMotor.setSpeed(STRAIGHT_LINE_TRAVEL_SPEED);
 		
 		// Travel to next waypoint
-		leftMotor.rotate(SquareDriver.convertDistance(wheelRadius, distance), true);
-		rightMotor.rotate(SquareDriver.convertDistance(wheelRadius, distance), false);
+		leftMotor.rotate(Driver.convertDistance(wheelRadius, distance), true);
+		rightMotor.rotate(Driver.convertDistance(wheelRadius, distance), false);
 	}
 	
 	private void turnTo(double theta) {
@@ -95,11 +95,11 @@ public class Navigator extends Thread {
 			rotationAngle += 360;
 		
 		if (rotationAngle > 0) {
-			leftMotor.rotate(SquareDriver.convertAngle(wheelRadius, wheelBase, rotationAngle), true);
-			rightMotor.rotate(-SquareDriver.convertAngle(wheelRadius, wheelBase, rotationAngle), false);
+			leftMotor.rotate(Driver.convertAngle(wheelRadius, wheelBase, rotationAngle), true);
+			rightMotor.rotate(-Driver.convertAngle(wheelRadius, wheelBase, rotationAngle), false);
 		} else {
-			leftMotor.rotate(-SquareDriver.convertAngle(wheelRadius, wheelBase, -rotationAngle), true);
-			rightMotor.rotate(SquareDriver.convertAngle(wheelRadius, wheelBase, -rotationAngle), false);
+			leftMotor.rotate(-Driver.convertAngle(wheelRadius, wheelBase, -rotationAngle), true);
+			rightMotor.rotate(Driver.convertAngle(wheelRadius, wheelBase, -rotationAngle), false);
 		}
 	}
 

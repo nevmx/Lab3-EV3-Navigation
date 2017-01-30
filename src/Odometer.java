@@ -71,20 +71,6 @@ public class Odometer extends Thread {
 					theta += 2*Math.PI;
 				x = x + dX;											// update estimates of X and Y position
 				y = y + dY;	
-				
-				//updates to orientation for sensor processing
-				if (SquareDriver.orientation == 0 || SquareDriver.orientation == 4){						//set orientation based on the orientation
-					orientation = "+y";
-				}
-				else if (SquareDriver.orientation == 1){
-					orientation = "+x";
-				}
-				else if (SquareDriver.orientation == 2){
-					orientation = "-y";
-				}
-				else if (SquareDriver.orientation == 3){
-					orientation = "-x";
-				}
 			}
 
 			// this ensures that the odometer only runs once every period
