@@ -182,27 +182,22 @@ public class Navigator extends Thread {
 			
 			int distance = ow.getDistance();
 			
-			int bandCenter = WF_BANDCENTER;
-			int bandWidth = WF_BANDWIDTH;
-			int motorLow = WF_MOTOR_LOW;
-			int motorHigh = WF_MOTOR_HIGH;
-			
 			// Right turn
-			if (distance < (bandCenter - bandWidth)) {
-				leftMotor.setSpeed(motorLow);
+			if (distance < (WF_BANDCENTER - WF_BANDWIDTH)) {
+				leftMotor.setSpeed(WF_MOTOR_LOW);
 				rightMotor.setSpeed(0);
 			}
 			
 			// Left turn
-			else if (distance > (bandCenter + bandWidth)) {
-				leftMotor.setSpeed((int)(motorLow*1.35));
-				rightMotor.setSpeed(motorHigh);
+			else if (distance > (WF_BANDCENTER + WF_BANDWIDTH)) {
+				leftMotor.setSpeed((int)(WF_MOTOR_LOW*1.35));
+				rightMotor.setSpeed(WF_MOTOR_HIGH);
 			}
 			
 			// Straight
 			else {
-				leftMotor.setSpeed(motorHigh);
-				rightMotor.setSpeed(motorHigh);
+				leftMotor.setSpeed(WF_MOTOR_HIGH);
+				rightMotor.setSpeed(WF_MOTOR_HIGH);
 			}
 			
 			leftMotor.forward();
