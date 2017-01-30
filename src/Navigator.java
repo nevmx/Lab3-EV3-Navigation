@@ -19,7 +19,7 @@ public class Navigator extends Thread {
 	final static int WF_BANDWIDTH = 3;				// Width of dead band (cm)
 	final static int WF_MOTOR_LOW = 100;			// Speed of slower rotating wheel (deg/sec)
 	final static int WF_MOTOR_HIGH = 200;
-	final static int WF_FINAL_ANGLE_THRESHOLD = 85;
+	final static int WF_FINAL_ANGLE_THRESHOLD = 70;
 	
 	private boolean isNavigating;
 	private Odometer odometer;
@@ -111,7 +111,7 @@ public class Navigator extends Thread {
 	public void run() {
 		
 		try {
-			Thread.sleep(5000);
+			Thread.sleep(7000);
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 		}
